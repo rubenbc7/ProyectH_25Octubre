@@ -5,7 +5,7 @@ using System.Collections;
 
 public class EnterVehicle : MonoBehaviour
 {
-    private bool inVehicle = false;
+    public PlayerData playerdata;
   
     public GameObject car_guiObj;
     public GameObject player_gui;
@@ -56,7 +56,7 @@ public class EnterVehicle : MonoBehaviour
         if (Input.GetKeyDown(eButton))
         {
             // Si el jugador está dentro del carro, sale; de lo contrario, entra en el carro
-            if (inVehicle)
+            if (playerdata.inVehicle)
             {
                 exit_from_car();
             }
@@ -105,7 +105,7 @@ public class EnterVehicle : MonoBehaviour
         player.SetActive(false);
         playerMinimap.SetActive(false);
         carMinimap.SetActive(true);
-        inVehicle = true;
+        playerdata.inVehicle = true;
         timelineoff();
         car.GetComponent<CarControllerPlayer>().enabled = true;
 
@@ -118,7 +118,7 @@ public class EnterVehicle : MonoBehaviour
     }
     public void exit_from_car()
     {
-        if (inVehicle == true )
+        if (playerdata.inVehicle == true )
         {
             //car.GetComponent<Rigidbody>().isKinematic = true;
             //car.GetComponent<CarAudio>().enabled = false;
@@ -133,7 +133,7 @@ public class EnterVehicle : MonoBehaviour
             car_cam.SetActive(false);
             exitbutton.SetActive(false);
             mirror.SetActive(false);
-            inVehicle = false;
+            playerdata.inVehicle = false;
             playerMinimap.SetActive(true);
             carMinimap.SetActive(false);
             print("exit car");

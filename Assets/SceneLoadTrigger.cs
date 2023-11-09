@@ -14,7 +14,7 @@ public class SceneLoadTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && !loadingScenes)
+        if ((other.CompareTag("Player") || other.CompareTag("Prota")) && !loadingScenes)
         {
             StartCoroutine(LoadScenesAsync());
         }

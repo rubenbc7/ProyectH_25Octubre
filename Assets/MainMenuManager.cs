@@ -3,9 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using CI.QuickSave;
 
 public class MainMenuManager : MonoBehaviour
 {
+    [SerializeField] private GameObject _mainmenu;
+    [SerializeField] private GameObject _startgamebutton;
+
     [Header("Main Menu Objects")]
     [SerializeField] private GameObject _loadingBarObject;
     [SerializeField] private Image _loadingBar;
@@ -17,21 +21,60 @@ public class MainMenuManager : MonoBehaviour
     [SerializeField] private SceneField _levelSceneExtra;
     [Header("Scenes to Unload")]
     [SerializeField] private SceneField _scenesToUnload;
+    [Header("Default New Games Values")]
+    [SerializeField] private Vector3 _defaultpos = new Vector3(12.32f, 50f, -720.7f);
 
     private List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
 
     private void Awake()
     {
         _loadingBarObject.SetActive(false);
+        ShowMenu();
+    }
+    public void StartGame()
+    {
+        _startgamebutton.SetActive(false);
+        _mainmenu.SetActive(true);
     }
 
     // Update is called once per frame
-    public void StartGame()
+    public void Continue()
     {
         // Hide the menu immediately
+        
         HideMenu();
 
         // Load scenes asynchronously
+        _scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGameplay));
+        _scenesToLoad.Add(SceneManager.LoadSceneAsync(_levelScene, LoadSceneMode.Additive));
+        _scenesToLoad.Add(SceneManager.LoadSceneAsync(_levelSceneExtra, LoadSceneMode.Additive));
+
+        // Unload scenes asynchronously
+        SceneManager.UnloadSceneAsync(_scenesToUnload);
+
+        // Start a coroutine to check loading progress
+        StartCoroutine(ProgressLoadingBar());
+    }
+
+    public void NewGame()
+    {
+        // Hide the menu immediately
+        QuickSaveWriter.Create("Inputs")
+                       .Write("Scene1", true)
+                       .Write("Input1", new Vector3(7f, -50f, -78f))
+                       .Write("Input2", new Quaternion(0f, -96f, -0f, 0))
+					   .Write("Input3", new Vector3(7f, -50f, -78f))
+                       .Write("Input4", new Quaternion(0f, 286f, -0f, 0))
+					   .Write("Input5", new Vector3(-12f, 26f, -0.8f))
+                       .Write("Input7", new Quaternion(29f, 26f, 0.8f, 0))
+                       .Write("Input6", false)
+                       .Commit();
+        
+        
+        HideMenu();
+
+        // Load scenes asynchronously
+        Time.timeScale = 0f;
         _scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGameplay));
         _scenesToLoad.Add(SceneManager.LoadSceneAsync(_levelScene, LoadSceneMode.Additive));
         _scenesToLoad.Add(SceneManager.LoadSceneAsync(_levelSceneExtra, LoadSceneMode.Additive));
@@ -48,6 +91,13 @@ public class MainMenuManager : MonoBehaviour
         for (int i = 0; i < _ObjectsToHide.Length; i++)
         {
             _ObjectsToHide[i].SetActive(false);
+        }
+    }
+    private void ShowMenu()
+    {
+        for (int i = 0; i < _ObjectsToHide.Length; i++)
+        {
+            _ObjectsToHide[i].SetActive(true);
         }
     }
 
@@ -69,6 +119,7 @@ public class MainMenuManager : MonoBehaviour
                     // Once the total progress is at least 90%, you can consider the scenes almost loaded
                     HideMenu();
                 }
+                Time.timeScale = 0f;
 
                 yield return null;
             }
@@ -84,4 +135,8 @@ public class MainMenuManager : MonoBehaviour
         }
         return totalProgress / _scenesToLoad.Count;
     }
+
+    public void Exit(){
+		Application.Quit();
+	}
 }

@@ -1,14 +1,16 @@
+//using CI.QuickSave;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
-using CI.QuickSave;
 
 public class MainMenuManager : MonoBehaviour
 {
     [SerializeField] private GameObject _mainmenu;
     [SerializeField] private GameObject _startgamebutton;
+    [SerializeField] private GameObject _persistantGameplay;
+    public string PersistentGameplay;
 
     [Header("Main Menu Objects")]
     [SerializeField] private GameObject _loadingBarObject;
@@ -26,9 +28,12 @@ public class MainMenuManager : MonoBehaviour
 
     private List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
 
-    private void Awake()
+    private void Start()
     {
+        _persistantGameplay = GameObject.FindWithTag("PG");
+         //Debug.LogError(_persistantGameplay);
         _loadingBarObject.SetActive(false);
+        _persistantGameplay.SetActive(false);
         ShowMenu();
     }
     public void StartGame()
@@ -45,7 +50,8 @@ public class MainMenuManager : MonoBehaviour
         HideMenu();
 
         // Load scenes asynchronously
-        _scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGameplay));
+        
+        //_scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGameplay));
         _scenesToLoad.Add(SceneManager.LoadSceneAsync(_levelScene, LoadSceneMode.Additive));
         _scenesToLoad.Add(SceneManager.LoadSceneAsync(_levelSceneExtra, LoadSceneMode.Additive));
 
@@ -54,13 +60,13 @@ public class MainMenuManager : MonoBehaviour
 
         // Start a coroutine to check loading progress
         StartCoroutine(ProgressLoadingBar());
+        _persistantGameplay.SetActive(true);
     }
 
     public void NewGame()
     {
         // Hide the menu immediately
-        QuickSaveWriter.Create("Inputs")
-                       .Write("Scene1", true)
+        /*QuickSaveWriter.Create("Inputs")
                        .Write("Input1", new Vector3(7f, -50f, -78f))
                        .Write("Input2", new Quaternion(0f, -96f, -0f, 0))
 					   .Write("Input3", new Vector3(7f, -50f, -78f))
@@ -68,14 +74,18 @@ public class MainMenuManager : MonoBehaviour
 					   .Write("Input5", new Vector3(-12f, 26f, -0.8f))
                        .Write("Input7", new Quaternion(29f, 26f, 0.8f, 0))
                        .Write("Input6", false)
+                       .Write("Scene1", true)
+                       .Write("Cash", 20)
                        .Commit();
+        */
+        
         
         
         HideMenu();
 
         // Load scenes asynchronously
         Time.timeScale = 0f;
-        _scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGameplay));
+        //_scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGameplay));
         _scenesToLoad.Add(SceneManager.LoadSceneAsync(_levelScene, LoadSceneMode.Additive));
         _scenesToLoad.Add(SceneManager.LoadSceneAsync(_levelSceneExtra, LoadSceneMode.Additive));
 
@@ -84,6 +94,7 @@ public class MainMenuManager : MonoBehaviour
 
         // Start a coroutine to check loading progress
         StartCoroutine(ProgressLoadingBar());
+        _persistantGameplay.SetActive(true);
     }
 
     private void HideMenu()
@@ -119,7 +130,6 @@ public class MainMenuManager : MonoBehaviour
                     // Once the total progress is at least 90%, you can consider the scenes almost loaded
                     HideMenu();
                 }
-                Time.timeScale = 0f;
 
                 yield return null;
             }

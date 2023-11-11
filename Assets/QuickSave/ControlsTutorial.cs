@@ -26,9 +26,9 @@ public class ControlsTutorial : MonoBehaviour
 	public SceneData sceneData;
 	public Vector3 carPosition;
 
-	void Start()
+	private void Awake()
 	{
-		Load();
+		//Load();
 		ispaused = false;
 		lockedMouse = true;
 		style = new GUIStyle();
@@ -107,6 +107,7 @@ public class ControlsTutorial : MonoBehaviour
 	}
 	public void Exit(){
 		SceneManager.LoadScene("MainMenu");
+		SceneManager.LoadSceneAsync("PersistentGameplay", LoadSceneMode.Additive);
 		Time.timeScale = 1f;
 	}
 

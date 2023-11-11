@@ -11,6 +11,7 @@ public class PlayerData : MonoBehaviour
     public Vector3 characterPosition;
     public Vector3 carPosition;
     public bool inVehicle = false;
+    public int cash = 0;
     // Start is called before the first frame update
     public void Save()
     {
@@ -22,6 +23,7 @@ public class PlayerData : MonoBehaviour
 					   .Write("Input5", CarCam.transform.position)
                        .Write("Input7", CarCam.transform.rotation)
                        .Write("Input6", inVehicle)
+                       .Write("Cash", cash)
                        .Commit();
     }
 
@@ -36,6 +38,7 @@ public class PlayerData : MonoBehaviour
 					   .Read<Vector3>("Input5", (r) => {CarCam.transform.position = r; })
                        .Read<Quaternion>("Input7", (r) => {CarCam.transform.rotation = r; })
                        .Read<bool>("Input6", (r) => {inVehicle = r; });
+                       
     }
     public void NewGame()
     {

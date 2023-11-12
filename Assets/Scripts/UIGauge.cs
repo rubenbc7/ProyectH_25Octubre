@@ -28,7 +28,7 @@ public class UIGauge : MonoBehaviour
     }
 
     void SetValues(){
-        ApplyCalculation(1000);
+        ApplyCalculation(topValue);
     }
 
     // Update is called once per frame

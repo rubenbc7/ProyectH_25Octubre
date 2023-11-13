@@ -22,9 +22,9 @@ public class Pits : MonoBehaviour
             uIGaugeNos = GaugeNosObject.GetComponent<UIGauge>();
 
             carControllerPlayer.CurrentNosLeft = carControllerPlayer.MaxNOSCapacity;
-            deform.carHealth = 1000f;
+            deform.carHealth = 2000f;
             uIGaugeNos.ApplyCalculation(carControllerPlayer.CurrentNosLeft);
-            uIGaugeHealth.ApplyCalculation(1000f);
+            uIGaugeHealth.ApplyCalculation(2000f);
             Debug.Log("pits");
         }
     }

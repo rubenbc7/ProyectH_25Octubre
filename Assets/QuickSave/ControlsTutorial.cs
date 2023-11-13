@@ -31,6 +31,8 @@ public class ControlsTutorial : MonoBehaviour
 		//Load();
 		ispaused = false;
 		lockedMouse = true;
+		 Cursor.lockState = CursorLockMode.Locked;
+		 Cursor.visible = false;
 		style = new GUIStyle();
 		style.alignment = TextAnchor.MiddleCenter;
 		style.fontSize = 36;
@@ -45,20 +47,20 @@ public class ControlsTutorial : MonoBehaviour
 
 	void Update()
 	{
-		if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1) || mouselocked == false)//Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
-		{
-			Cursor.lockState = CursorLockMode.Locked;
-			Cursor.visible = false;
-		}
+		//if (Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))//Input.GetMouseButtonDown(0) || Input.GetMouseButtonDown(1))
+		//{
+		//	Cursor.lockState = CursorLockMode.Locked;
+		//	Cursor.visible = false;
+		//}
 		if(Input.GetKeyDown("escape"))
 		{
 			PauseMenu();
 		}
-		if ( mouselocked == true)
-		{
-			Cursor.lockState = CursorLockMode.Confined;
-			Cursor.visible = true;
-		}
+		//if ( mouselocked == true)
+		//{
+			//Cursor.lockState = CursorLockMode.Confined;
+			//Cursor.visible = true;
+		//}
 		
 		keyboardCommands.SetActive(Input.GetKey(KeyCode.F2));
 		gamepadCommands.SetActive(Input.GetKey(KeyCode.F3) || Input.GetKey(KeyCode.Joystick1Button7));
@@ -68,7 +70,8 @@ public class ControlsTutorial : MonoBehaviour
 
 		
 			pauseMenu.SetActive(true);
-			mouselocked = true;
+			Cursor.lockState = CursorLockMode.Confined;
+			Cursor.visible = true;
 			ispaused = true;
 			Time.timeScale = 0f;
 
@@ -77,7 +80,8 @@ public class ControlsTutorial : MonoBehaviour
 		if(ispaused)
 		{
 			pauseMenu.SetActive(false);
-			mouselocked = false;
+			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.visible = false;
 			ispaused = false;
 			Time.timeScale = 1f;
 			return;
@@ -107,7 +111,8 @@ public class ControlsTutorial : MonoBehaviour
 	}
 	public void Exit(){
 		SceneManager.LoadScene("MainMenu");
-		SceneManager.LoadSceneAsync("PersistentGameplay", LoadSceneMode.Additive);
+		SceneManager.LoadSceneAsync("StartCity", LoadSceneMode.Additive);
+		SceneManager.LoadSceneAsync("StartCityMountains", LoadSceneMode.Additive);
 		Time.timeScale = 1f;
 	}
 

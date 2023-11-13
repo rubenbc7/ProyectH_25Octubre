@@ -112,8 +112,8 @@ public class QuestGiver : MonoBehaviour
     {
         if (radius > 0 && walkIntoStartQuest == true)
         {
-            mouseLocker = GameObject.FindGameObjectWithTag("GameController");
-            controlsTutorial = mouseLocker.GetComponent<ControlsTutorial>();
+            //mouseLocker = GameObject.FindGameObjectWithTag("GameController");
+            //controlsTutorial = mouseLocker.GetComponent<ControlsTutorial>();
             CQPlayerObject player = coll.GetComponent<CQPlayerObject>();
             if (player == null)
             {
@@ -126,7 +126,10 @@ public class QuestGiver : MonoBehaviour
                     if (quest != null && quest.pickUpAble == true)
                     {
                         StartQuestPopUp(player, quest);
-                        controlsTutorial.mouselocked = true;
+
+                        Cursor.lockState = CursorLockMode.Confined;
+			            Cursor.visible = true;
+                        //controlsTutorial.mouselocked = true;
                     }
                 }
             }
@@ -135,7 +138,8 @@ public class QuestGiver : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        controlsTutorial.mouselocked = false;
+        Cursor.lockState = CursorLockMode.Locked;
+		Cursor.visible = false;;
     }
 
     /// <summary>

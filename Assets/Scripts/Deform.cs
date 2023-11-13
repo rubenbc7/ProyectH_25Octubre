@@ -22,14 +22,15 @@ public class Deform : MonoBehaviour
     private MeshCollider coll;
     private Vector3[] startingVerticies;
     private Vector3[] meshVerticies;
-    //public GameObject NormalCamera;
+    public GameObject NormalCamera;
+    public GameObject CrashCamera;
     public CameraController cameraController;
 
     [SerializeField] MeshFilter[] carParts;
     Rigidbody m_Rigidbody;
     public GameObject crashUI;
     public GameObject raceUI;
-    bool crashed = false;
+    public bool crashed = false;
     public UIGauge uIHealthGauge;
  
     void Start()
@@ -73,9 +74,12 @@ public class Deform : MonoBehaviour
                 
                 collisionPower = 400f;
                 hardness = hardness/2;
-                //NormalCamera.SetActive(false);
-                //CrashCamera.SetActive(true);
-                cameraController.SetCrashCamera();
+                NormalCamera.SetActive(false);
+                CrashCamera.SetActive(true);
+
+                Cursor.lockState = CursorLockMode.Confined;
+			    Cursor.visible = true;
+                //cameraController.SetCrashCamera();
                 StartCoroutine(WaitForOneSecond());
             }
 
@@ -125,10 +129,10 @@ public class Deform : MonoBehaviour
     {
         Time.timeScale = 0.1f;
         Time.fixedDeltaTime = Time.timeScale * 0.01f;
-        m_Rigidbody = GetComponent<Rigidbody>();
+        //m_Rigidbody = GetComponent<Rigidbody>();
         crashUI.SetActive(true);
         raceUI.SetActive(false);
-        m_Rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+        //m_Rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
         yield return new WaitForSeconds(0.06f);
         
         Time.timeScale = 1f;

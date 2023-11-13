@@ -30,14 +30,17 @@ public class MainMenuManager : MonoBehaviour
 
     private void Start()
     {
-        _persistantGameplay = GameObject.FindWithTag("PG");
+        //_persistantGameplay = GameObject.FindWithTag("PG");
          //Debug.LogError(_persistantGameplay);
         _loadingBarObject.SetActive(false);
-        _persistantGameplay.SetActive(false);
+        //_persistantGameplay.SetActive(false);
         ShowMenu();
+        Cursor.lockState = CursorLockMode.Confined;
+		Cursor.visible = true;
     }
     public void StartGame()
     {
+        
         _startgamebutton.SetActive(false);
         _mainmenu.SetActive(true);
     }
@@ -51,7 +54,7 @@ public class MainMenuManager : MonoBehaviour
 
         // Load scenes asynchronously
         
-        //_scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGameplay));
+        _scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGameplay));
         _scenesToLoad.Add(SceneManager.LoadSceneAsync(_levelScene, LoadSceneMode.Additive));
         _scenesToLoad.Add(SceneManager.LoadSceneAsync(_levelSceneExtra, LoadSceneMode.Additive));
 
@@ -94,7 +97,7 @@ public class MainMenuManager : MonoBehaviour
 
         // Start a coroutine to check loading progress
         StartCoroutine(ProgressLoadingBar());
-        _persistantGameplay.SetActive(true);
+        //_persistantGameplay.SetActive(true);
     }
 
     private void HideMenu()

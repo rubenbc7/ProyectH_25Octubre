@@ -25,7 +25,7 @@ public class ThirdPersonOrbitCamBasic : MonoBehaviour
 	private float targetFOV;                                           // Target camera Field of View.
 	private float targetMaxVerticalAngle;                              // Custom camera max vertical clamp angle.
 	private bool isCustomOffset;                                       // Boolean to determine whether or not a custom camera offset is being used.
-
+	public ControlsTutorial _controlsTutorial;
 	// Get the camera horizontal angle.
 	public float GetH => angleH;
 
@@ -95,6 +95,16 @@ public class ThirdPersonOrbitCamBasic : MonoBehaviour
 		smoothCamOffset = Vector3.Lerp(smoothCamOffset, customOffsetCollision ? Vector3.zero : noCollisionOffset, smooth * Time.deltaTime);
 
 		cam.position =  player.position + camYRotation * smoothPivotOffset + aimRotation * smoothCamOffset;
+		if(_controlsTutorial.ispaused)
+		{
+			horizontalAimingSpeed = 0f;                           // Horizontal turn speed.
+			verticalAimingSpeed = 0f;   
+		}
+		if(_controlsTutorial.ispaused == false)
+		{
+			horizontalAimingSpeed = 6f;                           // Horizontal turn speed.
+			verticalAimingSpeed = 6f;   
+		}
 	}
 
 	// Set camera offsets to custom values.

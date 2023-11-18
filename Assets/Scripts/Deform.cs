@@ -7,6 +7,7 @@ public class Deform : MonoBehaviour
     //[Range(0, 10)]
     [SerializeField] float deformRadius = 0.2f;
     [SerializeField] float hardness = 0f;
+    private float initialHardness;
     //[Range(0, 1)]
     [SerializeField] float damageFalloff = 1;
     //[Range(0, 10)]
@@ -17,13 +18,15 @@ public class Deform : MonoBehaviour
 
     public AudioClip[] collisionSounds;
  
-    private MeshFilter filter;
+    [SerializeField] private MeshFilter filter;
     //private Rigidbody physics;
     private MeshCollider coll;
-    private Vector3[] startingVerticies;
-    private Vector3[] meshVerticies;
+    private MeshCollider Startingcoll;
+    [SerializeField] private Vector3[] startingVerticies;
+    [SerializeField] private Vector3[] meshVerticies;
     public GameObject NormalCamera;
     public GameObject CrashCamera;
+    public GameObject DrownedCamera;
     public CameraController cameraController;
 
     [SerializeField] MeshFilter[] carParts;
@@ -32,6 +35,9 @@ public class Deform : MonoBehaviour
     public GameObject raceUI;
     public bool crashed = false;
     public UIGauge uIHealthGauge;
+    private Vector3 deform;
+    private bool isDrowned = false;
+    [SerializeField] private GameObject _carroceria;
  
     void Start()
     {
@@ -48,15 +54,60 @@ public class Deform : MonoBehaviour
         combinedMesh.CombineMeshes(combine);
         
         GetComponent<MeshFilter>().sharedMesh = combinedMesh;
-        gameObject.GetComponent<MeshCollider>().sharedMesh = combinedMesh;
+        GetComponent<MeshCollider>().sharedMesh = combinedMesh;
 
         filter = GetComponent<MeshFilter>();
  
         if (GetComponent<MeshCollider>())
             coll = GetComponent<MeshCollider>();
- 
+
+        Startingcoll = coll;
         startingVerticies = filter.mesh.vertices;
         meshVerticies = filter.mesh.vertices;
+        initialHardness = hardness;
+        Debug.Log(meshVerticies);
+    }
+    void OnTriggerEnter(Collider other)
+    {
+       if(other.gameObject.tag == "WaterCollider")
+       {
+        isDrowned = true;
+        Drown();
+       }
+    }
+    void Crash()
+    {
+                //Debug.Log(collisionPower);
+                Debug.Log("FATAL CRASH");
+
+                crashed = true;
+                carHealth = 0f;
+                
+                
+                NormalCamera.SetActive(false);
+                CrashCamera.SetActive(true);
+
+                Cursor.lockState = CursorLockMode.Confined;
+			    Cursor.visible = true;
+    }
+
+    void Drown()
+    {
+                //Debug.Log(collisionPower);
+                Debug.Log("Te Ahogaste");
+
+                isDrowned = true;
+                carHealth = 0f;
+                NormalCamera.SetActive(false);
+                CrashCamera.SetActive(true);
+                
+
+                Cursor.lockState = CursorLockMode.Confined;
+			    Cursor.visible = true;
+                StartCoroutine(WaitForOneSecond());
+                m_Rigidbody = GetComponent<Rigidbody>();
+                m_Rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+                DrownedCamera.SetActive(true);
     }
     
     void OnCollisionEnter(Collision collision)
@@ -66,21 +117,15 @@ public class Deform : MonoBehaviour
 
         if(carHealth <= 0f && !crashed || collisionPower > 400f || collision.gameObject.tag == "terrain" && !crashed)
             {
-                Debug.Log(collisionPower);
-                Debug.Log("Animacion chocaste");
-
-                crashed = true;
-                carHealth = 0f;
-                
                 collisionPower = 400f;
                 hardness = hardness/2;
-                NormalCamera.SetActive(false);
-                CrashCamera.SetActive(true);
-
-                Cursor.lockState = CursorLockMode.Confined;
-			    Cursor.visible = true;
+                
+                Crash();
                 //cameraController.SetCrashCamera();
                 StartCoroutine(WaitForOneSecond());
+                m_Rigidbody = GetComponent<Rigidbody>();
+                m_Rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
+                crashUI.SetActive(true);
             }
 
         float maxDeform = collisionPower / (hardness * 100);
@@ -97,8 +142,10 @@ public class Deform : MonoBehaviour
  
             foreach (ContactPoint point in collision.contacts)
             {
+                Debug.Log(meshVerticies);
                 for (int i = 0; i < meshVerticies.Length; i++)
                 {
+                    
                     Vector3 vertexPosition = meshVerticies[i];
                     Vector3 pointPosition = transform.InverseTransformPoint(point.point);
                     float distanceFromCollision = Vector3.Distance(vertexPosition, pointPosition);
@@ -129,14 +176,16 @@ public class Deform : MonoBehaviour
     {
         Time.timeScale = 0.1f;
         Time.fixedDeltaTime = Time.timeScale * 0.01f;
-        //m_Rigidbody = GetComponent<Rigidbody>();
-        crashUI.SetActive(true);
+        
+        //crashUI.SetActive(true);
         raceUI.SetActive(false);
-        //m_Rigidbody.constraints = RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | RigidbodyConstraints.FreezeRotation;
-        yield return new WaitForSeconds(0.06f);
+
+        yield return new WaitForSeconds(0.09f);
         
         Time.timeScale = 1f;
         Time.fixedDeltaTime = 0.01f;
+        gameObject.GetComponent<UserControl> ().enabled = false;
+        
         
     }
     
@@ -145,5 +194,19 @@ public class Deform : MonoBehaviour
     {
         filter.mesh.vertices = meshVerticies;
         coll.sharedMesh = filter.mesh;
+    }
+
+    public void RestoreMeshVerticies()
+    {
+       
+       filter.mesh.vertices = startingVerticies;
+        meshVerticies = filter.mesh.vertices;
+       coll.sharedMesh = Startingcoll.sharedMesh;
+       hardness = initialHardness;
+       gameObject.GetComponent<UserControl> ().enabled = true;
+       m_Rigidbody = GetComponent<Rigidbody>();
+       m_Rigidbody.constraints = RigidbodyConstraints.None;;
+       
+       //Start();
     }
 }

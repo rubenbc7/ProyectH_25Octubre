@@ -20,7 +20,7 @@ public class ControlsTutorial : MonoBehaviour
 	private GameObject gamepadCommands;
 	public bool mouselocked;
 	public GameObject pauseMenu;
-	private bool ispaused;
+	public bool ispaused;
 	public Vector3 characterPosition;
 	public PlayerData playerData;
 	public SceneData sceneData;

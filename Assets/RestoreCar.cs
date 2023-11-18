@@ -11,6 +11,7 @@ public class RestoreCar : MonoBehaviour
     [SerializeField] private GameObject _carSpawnPoint;
     [SerializeField] private GameObject _normalCamera;
     [SerializeField] private GameObject _crashCamera;
+    [SerializeField] private GameObject _drownedCamera;
     [SerializeField] private GameObject _crashUi;
     [SerializeField] private GameObject _raceUi;
     public Deform deform;
@@ -29,6 +30,7 @@ public class RestoreCar : MonoBehaviour
         deform.crashed = false;
         _normalCamera.SetActive(true);
         _crashCamera.SetActive(false);
+        _drownedCamera.SetActive(false);
         _crashUi.SetActive(false);
         _raceUi.SetActive(true);
         carControllerPlayer = _playerCar.gameObject.GetComponent<CarControllerPlayer>();
@@ -44,7 +46,7 @@ public class RestoreCar : MonoBehaviour
         _playerCar.transform.position = _carSpawnPoint.transform.position;
         _playerCar.transform.rotation = _carSpawnPoint.transform.rotation;
 
-        
+        deform.RestoreMeshVerticies();
 
         Cursor.lockState = CursorLockMode.Locked;
 		Cursor.visible = false;

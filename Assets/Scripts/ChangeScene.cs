@@ -8,7 +8,7 @@ public class ChangeScene : MonoBehaviour
 
     private void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.CompareTag("Player")) // Asegúrate de que el jugador tenga un tag "Player".
+        if (collision.gameObject.CompareTag("Player") || collision.gameObject.CompareTag("Prota")) // Asegúrate de que el jugador tenga un tag "Player".
         {
             CargarEscena();
             Debug.Log("Cambiadeescenaalv)");

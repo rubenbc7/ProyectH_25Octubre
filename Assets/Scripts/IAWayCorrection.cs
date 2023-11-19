@@ -6,6 +6,7 @@ using UnityStandardAssets.Utility;
 
 public class IAWayCorrection : MonoBehaviour
 {   [SerializeField] WaypointCircuit circuit;
+    [SerializeField] private float fixAngle;
 
     int puntoActual = 0;
 
@@ -16,7 +17,7 @@ public class IAWayCorrection : MonoBehaviour
 
         float angulo = Vector3.Angle(direccionCarro, direccionPuntoActual);
 
-        if (angulo > 70f)
+        if (angulo > fixAngle)
         {
             Rotar(direccionPuntoActual);
         }

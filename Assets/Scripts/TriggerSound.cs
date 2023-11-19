@@ -13,21 +13,18 @@ public class TriggerSound : MonoBehaviour
         audioSource = gameObject.GetComponent<AudioSource>();
     }
 
-    void Update()
+    void OnTriggerEnter(Collider other)
     {
         Vector3 direccionOrigen = transform.forward;
         Vector3 direccionObjetivo = objetivo.position - transform.position;
 
         float angulo = Vector3.Angle(direccionOrigen, direccionObjetivo);
 
-        if (angulo < 90f)
+        if (angulo < 70f)
         {
             objetivoAdelante = true;
         }
-    }
 
-    void OnTriggerEnter(Collider other)
-    {
         if (other.CompareTag("Player") && objetivoAdelante)
         {
             audioSource.Play();

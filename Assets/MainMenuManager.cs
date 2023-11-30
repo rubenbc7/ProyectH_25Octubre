@@ -28,6 +28,11 @@ public class MainMenuManager : MonoBehaviour
 
     private List<AsyncOperation> _scenesToLoad = new List<AsyncOperation>();
 
+    private void Awake()
+    {
+        _scenesToLoad.Add(SceneManager.LoadSceneAsync("StartCityMountains", LoadSceneMode.Additive));
+        _scenesToLoad.Add(SceneManager.LoadSceneAsync("StartCity", LoadSceneMode.Additive));
+    }
     private void Start()
     {
         //_persistantGameplay = GameObject.FindWithTag("PG");

@@ -28,6 +28,7 @@ public class RestoreCar : MonoBehaviour
     {
         enterVehicle.exit_from_car();
         deform.crashed = false;
+        deform.isDrowned = false;
         _normalCamera.SetActive(true);
         _crashCamera.SetActive(false);
         _drownedCamera.SetActive(false);

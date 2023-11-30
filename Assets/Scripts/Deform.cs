@@ -36,7 +36,7 @@ public class Deform : MonoBehaviour
     public bool crashed = false;
     public UIGauge uIHealthGauge;
     private Vector3 deform;
-    private bool isDrowned = false;
+    public bool isDrowned = false;
     [SerializeField] private GameObject _carroceria;
  
     void Start()
@@ -53,10 +53,10 @@ public class Deform : MonoBehaviour
         Mesh combinedMesh = new Mesh();
         combinedMesh.CombineMeshes(combine);
         
-        GetComponent<MeshFilter>().sharedMesh = combinedMesh;
+        _carroceria.GetComponent<MeshFilter>().sharedMesh = combinedMesh;
         GetComponent<MeshCollider>().sharedMesh = combinedMesh;
 
-        filter = GetComponent<MeshFilter>();
+        filter = _carroceria.GetComponent<MeshFilter>();
  
         if (GetComponent<MeshCollider>())
             coll = GetComponent<MeshCollider>();
@@ -115,7 +115,7 @@ public class Deform : MonoBehaviour
         float collisionPower = (collision.impulse.magnitude)/100;
         
 
-        if(carHealth <= 0f && !crashed || collisionPower > 400f || collision.gameObject.tag == "terrain" && !crashed)
+        if(carHealth <= 0f && !crashed && !isDrowned || collision.gameObject.tag == "terrain" && !crashed && !isDrowned)
             {
                 collisionPower = 400f;
                 hardness = hardness/2;
@@ -205,7 +205,7 @@ public class Deform : MonoBehaviour
        hardness = initialHardness;
        gameObject.GetComponent<UserControl> ().enabled = true;
        m_Rigidbody = GetComponent<Rigidbody>();
-       m_Rigidbody.constraints = RigidbodyConstraints.None;;
+       m_Rigidbody.constraints = RigidbodyConstraints.None;
        
        //Start();
     }

@@ -17,7 +17,8 @@ public class MoveBehaviour : GenericBehaviour
 	private int groundedBool;                       // Animator variable related to whether or not the player is on ground.
 	private bool jump;                              // Boolean to determine whether or not the player started a jump.
 	private bool isColliding;                       // Boolean to determine if the player has collided with an obstacle.
-
+ 	public float obstacleDetectionDistance = 1.0f;
+	public float raycastHeightOffset = 1f;
 	// Start is always called after any Awake functions.
 	void Start()
 	{
@@ -114,6 +115,7 @@ public class MoveBehaviour : GenericBehaviour
 
 		// Call function that deals with player orientation.
 		Rotating(horizontal, vertical);
+		
 
 		// Set proper speed.
 		Vector2 dir = new Vector2(horizontal, vertical);
@@ -126,8 +128,11 @@ public class MoveBehaviour : GenericBehaviour
 		{
 			speed = sprintSpeed;
 		}
-
+		AdjustSpeedForObstacles();
 		behaviourManager.GetAnim.SetFloat(speedFloat, speed, speedDampTime, Time.deltaTime);
+
+		
+
 	}
 
 	// Remove vertical rigidbody velocity.
@@ -180,6 +185,13 @@ public class MoveBehaviour : GenericBehaviour
 			GetComponent<CapsuleCollider>().material.dynamicFriction = 0f;
 			GetComponent<CapsuleCollider>().material.staticFriction = 0f;
 		}
+		//if (collision.gameObject.CompareTag("Pared"))
+		//{
+		//	speed = 0f;  // Detener la velocidad.
+        //	behaviourManager.GetAnim.SetFloat(speedFloat, 0f);
+		//	Vector3 adjustmentVector = -transform.forward * 0.01f; // Ajusta según sea necesario.
+        //	transform.position += adjustmentVector;  // Detener la animación.
+		//}
 	}
 	private void OnCollisionExit(Collision collision)
 	{
@@ -187,4 +199,56 @@ public class MoveBehaviour : GenericBehaviour
 		GetComponent<CapsuleCollider>().material.dynamicFriction = 0.6f;
 		GetComponent<CapsuleCollider>().material.staticFriction = 0.6f;
 	}
+
+	private void AdjustSpeedForObstacles()
+    {
+        RaycastHit hit;
+
+        // Lanzar un rayo en la dirección del movimiento del jugador.
+		Debug.DrawRay(transform.position + Vector3.up * raycastHeightOffset, transform.forward * obstacleDetectionDistance, Color.green);
+        if (Physics.Raycast(transform.position + Vector3.up * raycastHeightOffset, transform.forward, out hit, obstacleDetectionDistance))
+        {
+            // Si el rayo golpea un collider, ajustar la velocidad en función de la distancia al objeto.
+            float distanceToObstacle = hit.distance;
+            float adjustedSpeed = Mathf.Clamp(distanceToObstacle, 0f, obstacleDetectionDistance) / obstacleDetectionDistance;
+
+            // Aplicar la velocidad ajustada.
+            speed *= adjustedSpeed;
+        }
+
+		 raycastHeightOffset = 1.0f;
+
+		RaycastHit waterHit;
+
+		var down45 = (transform.forward - transform.up).normalized;
+		var down22 = (transform.forward + down45).normalized;
+		var down11 = (transform.forward + down22).normalized;
+
+    	Debug.DrawRay(transform.position + Vector3.up * 1, down11 * 15, Color.red);
+		if (Physics.Raycast(transform.position + Vector3.up * 1, down11, out waterHit, 15, LayerMask.GetMask("Water")))
+   		 {
+				// Ajustar velocidad al acercarse al WaterCollider.
+			float distanceToWater = waterHit.distance;
+			//float adjustedSpeed = Mathf.Clamp(distanceToWater, 0f, obstacleDetectionDistance) / obstacleDetectionDistance;
+
+			// Aplicar la velocidad ajustada.
+			//speed *= adjustedSpeed;
+
+			// Detener la velocidad si está apunto de colisionar con WaterCollider.
+			if (distanceToWater < 4f)
+			{
+				speed = 0f;  // Detener la velocidad.
+				behaviourManager.GetAnim.SetFloat(speedFloat, 0f);
+				Vector3 adjustmentVector = -transform.forward * 1f; // Ajusta según sea necesario.
+				//transform.position += adjustmentVector;
+				 behaviourManager.GetRigidBody.MovePosition(transform.position + adjustmentVector);
+			}
+			else
+			{
+				// Aplicar la velocidad ajustada si no está tocando el agua.
+				float adjustedSpeed = Mathf.Clamp(distanceToWater, 0f, 10) / 10;
+				speed *= adjustedSpeed;
+			}
+    	}
+    }
 }

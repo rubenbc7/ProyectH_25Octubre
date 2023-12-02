@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// A UI logic holder for a quests. Used for displaying a list of quest.
@@ -19,7 +20,7 @@ public class QuestUILogic : MonoBehaviour
     /// The text element which should show the name of the quest
     /// </summary>
     [Tooltip("The text element which should show the name of the quest")]
-    public Text questName;
+    public TMP_Text questName;
 
     /// <summary>
     /// The text element which should show the description of the quest

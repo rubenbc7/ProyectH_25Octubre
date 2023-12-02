@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 
 /// <summary>
 /// A pop up for when picking up a quest, when the game is running
@@ -32,12 +33,12 @@ public class QuestPopUp : MonoBehaviour
     /// <summary>
     /// The text to contains the title
     /// </summary>
-    public Text title;
+    public TMP_Text title;
 
     /// <summary>
     /// The text to contain the description
     /// </summary>
-    public Text description;
+    public TMP_Text description;
 
     /// <summary>
     /// The text to contain the criterias

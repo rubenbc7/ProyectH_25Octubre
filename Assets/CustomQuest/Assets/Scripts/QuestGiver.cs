@@ -36,6 +36,7 @@ public class QuestGiver : MonoBehaviour
     public GameObject questSymbol;
     public GameObject mouseLocker;
     public ControlsTutorial controlsTutorial;
+    public ThirdPersonOrbitCamBasic thirdPersonOrbitCamBasic;
 
     /// <summary>
     ///  Use this for initialization
@@ -114,6 +115,7 @@ public class QuestGiver : MonoBehaviour
         {
             //mouseLocker = GameObject.FindGameObjectWithTag("GameController");
             //controlsTutorial = mouseLocker.GetComponent<ControlsTutorial>();
+            
             CQPlayerObject player = coll.GetComponent<CQPlayerObject>();
             if (player == null)
             {
@@ -129,7 +131,8 @@ public class QuestGiver : MonoBehaviour
 
                         Cursor.lockState = CursorLockMode.Confined;
 			            Cursor.visible = true;
-                        //controlsTutorial.mouselocked = true;
+                        
+                        //controlsTutorial.ispaused = true;
                     }
                 }
             }
@@ -139,7 +142,9 @@ public class QuestGiver : MonoBehaviour
     private void OnTriggerExit(Collider other)
     {
         Cursor.lockState = CursorLockMode.Locked;
-		Cursor.visible = false;;
+		Cursor.visible = false;
+        //controlsTutorial.ispaused = false;
+        
     }
 
     /// <summary>

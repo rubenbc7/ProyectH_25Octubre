@@ -33,7 +33,7 @@ public class RestoreCar : MonoBehaviour
         _crashCamera.SetActive(false);
         _drownedCamera.SetActive(false);
         _crashUi.SetActive(false);
-        _raceUi.SetActive(true);
+        _raceUi.SetActive(false);
         carControllerPlayer = _playerCar.gameObject.GetComponent<CarControllerPlayer>();
         carControllerPlayer.CurrentNosLeft = carControllerPlayer.MaxNOSCapacity;
         deform.carHealth = 2000f;

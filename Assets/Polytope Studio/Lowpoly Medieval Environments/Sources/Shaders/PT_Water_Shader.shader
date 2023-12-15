@@ -16,7 +16,7 @@ Shader "Polytope Studio/PT_Water_Shader"
 		_WaveAmplitude("Wave Amplitude", Range( 0 , 1)) = 0.2
 		[NoScaleOffset][Normal]_NormalMapTexture("Normal Map Texture ", 2D) = "bump" {}
 		_NormalMapWavesSpeed("Normal Map Waves Speed", Range( 0 , 1)) = 0.1
-		_NormalMapsWavesSize("Normal Maps Waves Size", Range( 0 , 10)) = 5
+		_NormalMapsWavesSize("Normal Maps Waves Size", Range( 0 , 400)) = 5
 		_FoamColor("Foam Color", Color) = (0.3066038,1,0.9145772,0)
 		_FoamAmount("Foam Amount", Range( 0 , 10)) = 1.5
 		_FoamPower("Foam Power", Range( 0.1 , 5)) = 0.5

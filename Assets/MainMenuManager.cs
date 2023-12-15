@@ -92,8 +92,9 @@ public class MainMenuManager : MonoBehaviour
         HideMenu();
 
         // Load scenes asynchronously
-        Time.timeScale = 0f;
+        //Time.timeScale = 0f;
         //_scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGameplay));
+        _scenesToLoad.Add(SceneManager.LoadSceneAsync(_persistentGameplay));
         _scenesToLoad.Add(SceneManager.LoadSceneAsync(_levelScene, LoadSceneMode.Additive));
         _scenesToLoad.Add(SceneManager.LoadSceneAsync(_levelSceneExtra, LoadSceneMode.Additive));
 
@@ -102,7 +103,7 @@ public class MainMenuManager : MonoBehaviour
 
         // Start a coroutine to check loading progress
         StartCoroutine(ProgressLoadingBar());
-        //_persistantGameplay.SetActive(true);
+        _persistantGameplay.SetActive(true);
     }
 
     private void HideMenu()
